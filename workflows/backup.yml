@@ -1,12 +1,21 @@
-name: Daily Backup
+name: Run Backup Script
+
 on:
-  schedule:
-    - cron: "0 2 * * *" # Runs daily at 2 AM UTC
+  push:
+    branches:
+      - main  # Trigger the action when changes are pushed to the 'main' branch
+
 jobs:
   backup:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use an Ubuntu-based virtual machine to run the script
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-      - name: Run Backup Script
-        run: bash bash-scripts/backup.sh
+      - name: Checkout repository
+        uses: actions/checkout@v3  # Check out your repository's code
+
+      - name: Set up environment
+        run: sudo apt-get install -y tar  # Install necessary tools, such as 'tar' for backups
+
+      - name: Run backup script
+        run: |
+          chmod +x backup-scripts/backup.sh  # Make sure the script is executable
+          ./backup-scripts/backup.sh  # Run the backup script
